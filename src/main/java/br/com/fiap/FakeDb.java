@@ -1,24 +1,11 @@
 package br.com.fiap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FakeDb {
+    public static Map<Long, InputDto> nomesCadastrados = new HashMap<>();
 
-
-
-    public FakeDb(List<InputDto> nomesCadastrados) {
-        this.nomesCadastrados = new ArrayList<>();
-        InputDto primeiroRegistro = new InputDto();
-        primeiroRegistro.setNome("Maria");
-        nomesCadastrados.add(primeiroRegistro);
-    }
-
-    public List<InputDto> getNomesCadastrados() {
-        return nomesCadastrados;
-    }
-
-    public void setNomesCadastrados(List<InputDto> nomesCadastrados) {
-        this.nomesCadastrados = nomesCadastrados;
-    }
 }

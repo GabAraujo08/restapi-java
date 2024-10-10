@@ -1,6 +1,7 @@
 package br.com.fiap;
 
 public class InputDto {
+    private Long id;
     private String nome;
 
     public String getNome() {
@@ -9,6 +10,14 @@ public class InputDto {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
 

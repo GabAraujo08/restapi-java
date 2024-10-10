@@ -2,13 +2,15 @@ package br.com.fiap;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Path("/rest")
 public class HelloWorldApi {
-    private FakeDb fakeDb = new FakeDb();
+
 
 
     @GET
@@ -36,18 +38,21 @@ public class HelloWorldApi {
     @Path("/cadastrar")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String cadastrarNome(InputDto input){
+    public Response cadastrarNome(InputDto input){
+        if(input.getId() != null){
+            FakeDb.nomesCadastrados.put(input.getId(), input);
+            return Response.status(Response.Status.CREATED).entity(input).build();
+        }else{
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("mensagem","id não pode ser nulo.")).build();
+        }
 
-        fakeDb.add(input.getNome());
-        return """
-                "response" : "Nome cadastrado com sucesso"
-                """;
     }
     @GET
     @Path("/localizar-nome")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> localizarNomes(){
+    public Map<Long, InputDto> localizarNomes(){
 
-        return fakeDb;
+        return FakeDb.nomesCadastrados;
     }
 }
