@@ -51,8 +51,22 @@ public class HelloWorldApi {
     @GET
     @Path("/localizar-nome")
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<Long, InputDto> localizarNomes(){
+    public Response localizarNomes(){
 
-        return FakeDb.nomesCadastrados;
+        return Response.status(Response.Status.OK)
+                .entity(FakeDb.nomesCadastrados).build();
+    }
+    @GET
+    @Path("/update//{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(@PathParam("id") Long id, InputDto input){
+        if(FakeDb.nomesCadastrados.containsKey(input.getId())){
+            FakeDb.nomesCadastrados.put(input.getId(), input);
+            return Response.status(Response.Status.OK).entity(input).build();
+        }else{
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
     }
 }
