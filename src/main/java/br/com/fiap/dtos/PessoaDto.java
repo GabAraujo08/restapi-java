@@ -1,6 +1,6 @@
-package br.com.fiap;
+package br.com.fiap.dtos;
 
-public class InputDto {
+public class PessoaDto {
     private Long id;
     private String nome;
 
