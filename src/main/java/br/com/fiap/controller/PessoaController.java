@@ -1,7 +1,11 @@
 package br.com.fiap.controller;
 
+import br.com.fiap.exceptions.PessoaNotFoundException;
 import br.com.fiap.infra.FakeDb;
 import br.com.fiap.dtos.PessoaDto;
+import br.com.fiap.models.Pessoa;
+import br.com.fiap.service.PessoaService;
+import br.com.fiap.service.PessoaServiceFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -10,17 +14,27 @@ import java.util.Map;
 
 @Path("/rest/pessoa")
 public class PessoaController {
+
+    private PessoaService pessoaService = PessoaServiceFactory.create();
+
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response cadastrarNome(PessoaDto input){
-        if(input.getId() != null){
-            FakeDb.nomesCadastrados.put(input.getId(), input);
-            return Response.status(Response.Status.CREATED).entity(input).build();
+        if(input.getId() == null){
+            Pessoa pessoa = this.pessoaService.create(new Pessoa(null, input.getNome()));
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(pessoa)
+                    .build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(Map.of("mensagem","id não pode ser nulo.")).build();
+                    .entity(
+                            Map.of(
+                                    "mensagem",
+                                    "Esse método só permite a criação de novas pessoas."))
+                    .build();
         }
 
     }
@@ -30,17 +44,17 @@ public class PessoaController {
     public Response localizarNomes(){
 
         return Response.status(Response.Status.OK)
-                .entity(FakeDb.nomesCadastrados).build();
+                .entity(this.pessoaService.findAll()).build();
     }
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") Long id, PessoaDto input){
-        if(FakeDb.nomesCadastrados.containsKey(input.getId())){
-            FakeDb.nomesCadastrados.put(input.getId(), input);
-            return Response.status(Response.Status.OK).entity(input).build();
-        }else{
+        try {
+            Pessoa updated = this.pessoaService.update(new Pessoa(id, input.getNome()));
+            return Response.status(Response.Status.OK).entity(updated).build();
+        } catch (PessoaNotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -48,10 +62,11 @@ public class PessoaController {
 
     @DELETE@Path("/{id}")
     public Response delete(@PathParam("id")Long id){
-        if(FakeDb.nomesCadastrados.containsKey(id)){
-            FakeDb.nomesCadastrados.remove(id);
-            return Response.status(Response.Status.NO_CONTENT).build();    }
-        else {
-            return Response.status(Response.Status.NOT_FOUND).build();    }
+        try {
+            this.pessoaService.deleteById(id);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (PessoaNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }
