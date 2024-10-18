@@ -1,7 +1,7 @@
 package br.com.fiap.controller;
 
 import br.com.fiap.exceptions.PessoaNotFoundException;
-import br.com.fiap.infra.FakeDb;
+import br.com.fiap.exceptions.UnsupportedServiceOperationException;
 import br.com.fiap.dtos.PessoaDto;
 import br.com.fiap.models.Pessoa;
 import br.com.fiap.service.PessoaService;
@@ -21,7 +21,7 @@ public class PessoaController {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response cadastrarNome(PessoaDto input){
+    public Response add(PessoaDto input) throws UnsupportedServiceOperationException {
         if(input.getId() == null){
             Pessoa pessoa = this.pessoaService.create(new Pessoa(null, input.getNome()));
             return Response
