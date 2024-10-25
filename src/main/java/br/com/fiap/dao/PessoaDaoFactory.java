@@ -5,7 +5,7 @@ public final class PessoaDaoFactory {
     private PessoaDaoFactory() {
     }
 
-    public static PessoaDao create() {
+    public static PessoaDao create(){
         return new PessoaDaoImpl();
     }
 }

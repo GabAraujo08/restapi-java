@@ -9,6 +9,6 @@ public final class DatabaseConnectionFactory {
     }
 
     public static DatabaseConnection create() throws SQLException {
-        return DatabaseConnectionImpl.getInstance();
-    }
+         return DatabaseConnectionImpl.getInstance();
+     }
 }

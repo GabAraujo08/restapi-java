@@ -7,13 +7,13 @@ import java.util.logging.Logger;
 
 final class DatabaseConnectionImpl implements DatabaseConnection {
 
-
     private static DatabaseConnectionImpl dbConnection;
+
     private static Connection connection;
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private  DatabaseConnectionImpl() throws SQLException {
+    private DatabaseConnectionImpl() throws SQLException {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             connection = DriverManager.getConnection(
@@ -22,13 +22,13 @@ final class DatabaseConnectionImpl implements DatabaseConnection {
                     DatabaseConfig.getPassword()
             );
         } catch (ClassNotFoundException e) {
-            logger.severe("Não foi localizada a classe Driver do Oracle.");
+            logger.severe("não foi localizada a classe Driver do Oracle");
         }
 
     }
 
     public static synchronized DatabaseConnectionImpl getInstance() throws SQLException {
-        if (dbConnection == null || connection.isClosed()) {
+        if(dbConnection == null || connection.isClosed()){
             dbConnection = new DatabaseConnectionImpl();
         }
         return dbConnection;
