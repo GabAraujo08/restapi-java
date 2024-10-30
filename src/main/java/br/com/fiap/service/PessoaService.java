@@ -16,5 +16,5 @@ public interface PessoaService {
 
     Pessoa update(Pessoa pessoa) throws PessoaNotFoundException, SQLException;
 
-    void deleteById(Long id) throws PessoaNotFoundException, SQLException;
+            void deleteById(Long id) throws PessoaNotFoundException, SQLException;
 }
